@@ -5,7 +5,7 @@ import json
 import re
 from dataclasses import dataclass
 
-import google.generativeai as genai
+from google import genai
 
 from ..config import settings
 from ..sensors.news import NewsItem
@@ -55,7 +55,7 @@ def _clamp(value: float, lo: float, hi: float) -> float:
 def score_news(
     ticker: str,
     items: list[NewsItem],
-    model_name: str = "gemini-1.5-flash",
+    model_name: str = "gemini-2.5-flash",
 ) -> SentimentResult:
     """뉴스 헤드라인 묶음을 단일 센티먼트 점수로 환산."""
     if not settings.gemini_api_key:
@@ -63,12 +63,11 @@ def score_news(
     if not items:
         return SentimentResult(score=0.0, confidence=0.0, rationale="no news", n_items=0)
 
-    genai.configure(api_key=settings.gemini_api_key)
-    model = genai.GenerativeModel(model_name)
+    client = genai.Client(api_key=settings.gemini_api_key)
     news_block = "\n\n".join(item.to_prompt_block() for item in items)
     prompt = _PROMPT.format(ticker=ticker, news_block=news_block)
 
-    response = model.generate_content(prompt)
+    response = client.models.generate_content(model=model_name, contents=prompt)
     payload = _extract_json(response.text)
     return SentimentResult(
         score=_clamp(payload.get("score", 0.0), -1.0, 1.0),
