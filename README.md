@@ -17,7 +17,7 @@
 | 1 | 데이터 센서 + Gemini 센티먼트 엔진 | 완료 |
 | 2 | XGBoost 예측 모델 | 완료 |
 | 3 | 리스크 방패 로직 | 완료 |
-| 4 | Backtrader 백테스팅 | 예정 |
+| 4 | 워크포워드 백테스팅 | 완료 |
 | 5 | AWS 배포 + Telegram 봇 | 예정 |
 
 ## 시작하기
@@ -35,7 +35,13 @@ python -m src.brain.predict AAPL --horizon 5
 
 # Phase 3: 전체 파이프라인 (센서 + 모델 + 센티먼트 + 리스크 방패 → 최종 결정)
 python -m src.decide AAPL --horizon 5
+
+# Phase 4: 워크포워드 백테스트 (3년 학습 → 6개월 OOS, 수수료/슬리피지 반영)
+python -m src.backtest.run AAPL --period 10y --train-days 756 --test-days 126
 ```
+
+> 주의: 백테스트는 모델 + 매크로/RSI 룰만 사용합니다. 과거 Gemini 센티먼트는 재현
+> 불가(미래 정보 누설)이므로 라이브에서만 적용됩니다.
 
 ### API 키 발급
 - **Gemini**: https://aistudio.google.com/app/apikey
