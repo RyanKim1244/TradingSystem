@@ -14,8 +14,8 @@
 
 | Phase | 내용 | 상태 |
 |-------|------|------|
-| 1 | 데이터 센서 + Gemini 센티먼트 엔진 | 진행 중 |
-| 2 | XGBoost 예측 모델 | 예정 |
+| 1 | 데이터 센서 + Gemini 센티먼트 엔진 | 완료 |
+| 2 | XGBoost 예측 모델 | 완료 |
 | 3 | 리스크 방패 로직 | 예정 |
 | 4 | Backtrader 백테스팅 | 예정 |
 | 5 | AWS 배포 + Telegram 봇 | 예정 |
@@ -25,7 +25,13 @@
 ```bash
 pip install -r requirements.txt
 cp .env.example .env   # 발급받은 API 키 입력
+
+# Phase 1: 단일 종목 데이터 + 센티먼트 스냅샷
 python -m src.main AAPL
+
+# Phase 2: 학습 → 예측
+python -m src.brain.train AAPL --period 5y --horizon 5
+python -m src.brain.predict AAPL --horizon 5
 ```
 
 ### API 키 발급
