@@ -38,3 +38,18 @@ MACRO_SERIES = {
     "yield_2y": "DGS2",
     "vix": "VIXCLS",
 }
+
+
+@dataclass(frozen=True)
+class ShieldConfig:
+    vix_block: float = 30.0
+    yield_spread_block: float = -0.5
+    rsi_oversold: float = 30.0
+    rsi_overbought: float = 70.0
+    sentiment_floor: float = 0.0
+    model_buy_threshold: float = 0.005
+    model_sell_threshold: float = -0.005
+    max_position_weight: float = 0.10
+
+
+shield_config = ShieldConfig()

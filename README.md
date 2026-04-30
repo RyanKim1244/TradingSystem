@@ -6,8 +6,8 @@
 ## 4-Tier 아키텍처
 
 1. **Sensors** (`src/sensors/`) — 시장 데이터 수집 (yfinance, FRED, 뉴스)
-2. **Brain** (`src/brain/`) — Gemini 감성 분석 + XGBoost 예측 (Phase 2)
-3. **Shield** (`src/shield/`) — VIX/펀더멘털 기반 리스크 관리 (Phase 3)
+2. **Brain** (`src/brain/`) — Gemini 감성 분석 + XGBoost 예측
+3. **Shield** (`src/shield/`) — VIX/펀더멘털 기반 리스크 관리
 4. **Execution** (`src/execution/`) — 시그널 산출 및 Telegram 알림 (Phase 5)
 
 ## 개발 단계
@@ -16,7 +16,7 @@
 |-------|------|------|
 | 1 | 데이터 센서 + Gemini 센티먼트 엔진 | 완료 |
 | 2 | XGBoost 예측 모델 | 완료 |
-| 3 | 리스크 방패 로직 | 예정 |
+| 3 | 리스크 방패 로직 | 완료 |
 | 4 | Backtrader 백테스팅 | 예정 |
 | 5 | AWS 배포 + Telegram 봇 | 예정 |
 
@@ -32,6 +32,9 @@ python -m src.main AAPL
 # Phase 2: 학습 → 예측
 python -m src.brain.train AAPL --period 5y --horizon 5
 python -m src.brain.predict AAPL --horizon 5
+
+# Phase 3: 전체 파이프라인 (센서 + 모델 + 센티먼트 + 리스크 방패 → 최종 결정)
+python -m src.decide AAPL --horizon 5
 ```
 
 ### API 키 발급
