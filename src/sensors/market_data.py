@@ -48,7 +48,7 @@ def fetch_macro(start: str | None = None) -> pd.DataFrame:
     fred = Fred(api_key=settings.fred_api_key)
     start = start or (datetime.utcnow() - timedelta(days=365 * 5)).strftime("%Y-%m-%d")
     series = {name: fred.get_series(code, observation_start=start) for name, code in MACRO_SERIES.items()}
-    macro = pd.DataFrame(series)
+    macro = pd.DataFrame(series).sort_index().ffill()
     macro["yield_spread"] = macro["yield_10y"] - macro["yield_2y"]
     macro.index = pd.to_datetime(macro.index)
     return macro
@@ -58,5 +58,5 @@ def build_feature_frame(ticker: str, period: str = "5y") -> pd.DataFrame:
     """가격 + 매크로를 일자 기준으로 병합한 단일 피처 테이블."""
     prices = fetch_price_history(ticker, period=period)
     macro = fetch_macro(start=prices.index.min().strftime("%Y-%m-%d"))
-    macro = macro.reindex(prices.index, method="ffill")
+    macro = macro.reindex(prices.index.union(macro.index)).ffill().reindex(prices.index)
     return prices.join(macro, how="left")
