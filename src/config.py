@@ -16,9 +16,15 @@ class Settings:
 
     @classmethod
     def load(cls) -> "Settings":
+        def _clean(value: str | None) -> str | None:
+            if value is None:
+                return None
+            cleaned = value.strip().strip("﻿").strip("\"'")
+            return cleaned or None
+
         return cls(
-            gemini_api_key=os.getenv("GEMINI_API_KEY"),
-            fred_api_key=os.getenv("FRED_API_KEY"),
+            gemini_api_key=_clean(os.getenv("GEMINI_API_KEY")),
+            fred_api_key=_clean(os.getenv("FRED_API_KEY")),
         )
 
 
